@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package go.micro.service.post_svc;
+
+service Post {
+    rpc SavePost (SavePostRequest) returns (SavePostResponse) {
+    }
+    rpc GetPostList (GetPostListRequest) returns (GetPostListResponse) {
+    }
+}
+
+
+message ErrorMsg {
+    string msg = 1;
+}
+
+message SavePostRequest {
+    int64 id = 1;
+    int32 type = 2;
+    string title = 3;
+    string description = 4;
+    int64 mengerId = 5;
+    int64 categoryId = 6;
+    repeated PostItem items = 7;
+}
+
+message SavePostResponse {
+    ErrorMsg errorMsg = 999;
+}
+
+message GetPostListRequest {
+    int64 categoryId = 1;
+    int64 lastId = 2;
+}
+
+message GetPostListResponse {
+    repeated PostInfo postInfos = 1;
+    ErrorMsg errorMsg = 999;
+}
+
+message PostInfo {
+    int64 id = 1;
+    int32 type = 2;
+    string title = 3;
+    string description = 4;
+    int64 mengerId = 5;
+    repeated PostItem item = 6;
+}
+
+message PostItem {
+    int64 objectId = 1;
+    int32 index = 2;
+}
+
+
+
