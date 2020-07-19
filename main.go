@@ -8,7 +8,8 @@ import (
 	"github.com/wmsx/post_svc/models"
 	"github.com/wmsx/post_svc/setting"
 
-	proto "github.com/wmsx/post_svc/proto/post"
+	categoryProto "github.com/wmsx/post_svc/proto/category"
+	postProto "github.com/wmsx/post_svc/proto/post"
 )
 
 const name = "wm.sx.svc.post"
@@ -44,7 +45,8 @@ func main() {
 		}),
 	)
 
-	_ = proto.RegisterPostHandler(service.Server(), new(handler.PostHandler))
+	_ = postProto.RegisterPostHandler(service.Server(), new(handler.PostHandler))
+	_ = categoryProto.RegisterCategoryHandler(service.Server(), new(handler.CategoryHandler))
 
 	if err := service.Run(); err != nil {
 		log.Fatal(err)

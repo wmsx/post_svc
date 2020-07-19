@@ -34,7 +34,7 @@ var _ server.Option
 // Client API for Post service
 
 type PostService interface {
-	SavePost(ctx context.Context, in *SavePostRequest, opts ...client.CallOption) (*SavePostResponse, error)
+	SavePost(ctx context.Context, in *CreatePostRequest, opts ...client.CallOption) (*CreatePostResponse, error)
 	GetPostList(ctx context.Context, in *GetPostListRequest, opts ...client.CallOption) (*GetPostListResponse, error)
 }
 
@@ -50,9 +50,9 @@ func NewPostService(name string, c client.Client) PostService {
 	}
 }
 
-func (c *postService) SavePost(ctx context.Context, in *SavePostRequest, opts ...client.CallOption) (*SavePostResponse, error) {
+func (c *postService) SavePost(ctx context.Context, in *CreatePostRequest, opts ...client.CallOption) (*CreatePostResponse, error) {
 	req := c.c.NewRequest(c.name, "Post.SavePost", in)
-	out := new(SavePostResponse)
+	out := new(CreatePostResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -73,13 +73,13 @@ func (c *postService) GetPostList(ctx context.Context, in *GetPostListRequest, o
 // Server API for Post service
 
 type PostHandler interface {
-	SavePost(context.Context, *SavePostRequest, *SavePostResponse) error
+	SavePost(context.Context, *CreatePostRequest, *CreatePostResponse) error
 	GetPostList(context.Context, *GetPostListRequest, *GetPostListResponse) error
 }
 
 func RegisterPostHandler(s server.Server, hdlr PostHandler, opts ...server.HandlerOption) error {
 	type post interface {
-		SavePost(ctx context.Context, in *SavePostRequest, out *SavePostResponse) error
+		SavePost(ctx context.Context, in *CreatePostRequest, out *CreatePostResponse) error
 		GetPostList(ctx context.Context, in *GetPostListRequest, out *GetPostListResponse) error
 	}
 	type Post struct {
@@ -93,7 +93,7 @@ type postHandler struct {
 	PostHandler
 }
 
-func (h *postHandler) SavePost(ctx context.Context, in *SavePostRequest, out *SavePostResponse) error {
+func (h *postHandler) SavePost(ctx context.Context, in *CreatePostRequest, out *CreatePostResponse) error {
 	return h.PostHandler.SavePost(ctx, in, out)
 }
 

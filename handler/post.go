@@ -9,7 +9,8 @@ import (
 
 type PostHandler struct{}
 
-func (p *PostHandler) SavePost(ctx context.Context, req *proto.SavePostRequest, res *proto.SavePostResponse) error {
+
+func (p *PostHandler) SavePost(ctx context.Context, req *proto.CreatePostRequest, res *proto.CreatePostResponse) error {
 	post := &models.Post{
 		Title:       req.Title,
 		Description: req.Description,
