@@ -10,10 +10,6 @@ service Post {
 }
 
 
-message ErrorMsg {
-    string msg = 1;
-}
-
 message CreatePostRequest {
     int64 id = 1;
     int32 type = 2;
@@ -25,7 +21,7 @@ message CreatePostRequest {
 }
 
 message CreatePostResponse {
-    ErrorMsg errorMsg = 999;
+    string errorMsg = 999;
 }
 
 message GetPostListRequest {
@@ -35,7 +31,7 @@ message GetPostListRequest {
 
 message GetPostListResponse {
     repeated PostInfo postInfos = 1;
-    ErrorMsg errorMsg = 999;
+    string errorMsg = 999;
 }
 
 message PostInfo {

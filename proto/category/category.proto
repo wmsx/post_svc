@@ -9,17 +9,13 @@ service Category {
     }
 }
 
-message ErrorMsg {
-    string msg = 1;
-}
-
 message CreateCategoryRequest {
     string name = 1;
     int64 mengerId = 2;
 }
 
 message CreateCategoryResponse {
-    ErrorMsg errorMsg = 999;
+    string errorMsg = 999;
 }
 
 message GetAllCategoryRequest {
@@ -33,7 +29,7 @@ message CategoryInfo {
 
 message GetAllCategoryResponse {
     repeated CategoryInfo categoryInfos = 1;
-    ErrorMsg errorMsg = 999;
+    string errorMsg = 999;
 }
 
 

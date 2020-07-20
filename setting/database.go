@@ -2,11 +2,11 @@ package setting
 
 import (
 	"github.com/micro/go-micro/v2/config"
-	log "github.com/micro/go-micro/v2/logger"
+	"github.com/micro/go-micro/v2/util/log"
 	"github.com/wmsx/xconf/pkg/client/source"
 )
 
-const DBNamespace = "db"
+const DBNamespace = "database"
 
 var DatabaseSetting = DataBase{}
 
