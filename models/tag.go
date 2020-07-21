@@ -1,10 +1,13 @@
 package models
 
-import "github.com/jinzhu/gorm"
-
 type Tag struct {
-	gorm.Model
+	Model
 	PostId int64
-	Name string
+	Name   string
 	Status byte
 }
+
+func (Tag) TableName() string {
+	return "t_tag"
+}
+

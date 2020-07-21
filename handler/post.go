@@ -9,7 +9,6 @@ import (
 
 type PostHandler struct{}
 
-
 func (p *PostHandler) SavePost(ctx context.Context, req *proto.CreatePostRequest, res *proto.CreatePostResponse) error {
 	post := &models.Post{
 		Title:       req.Title,
@@ -23,7 +22,7 @@ func (p *PostHandler) SavePost(ctx context.Context, req *proto.CreatePostRequest
 	postItems := make([]*models.PostItem, 0)
 	for _, protoPostItem := range req.Items {
 		postItem := &models.PostItem{
-			PostId:   int64(post.ID),
+			PostId:   post.ID,
 			ObjectId: protoPostItem.ObjectId,
 			Index:    protoPostItem.Index,
 			Status:   1,

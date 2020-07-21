@@ -3,10 +3,16 @@ package models
 import "github.com/jinzhu/gorm"
 
 type Category struct {
-	gorm.Model
-	Name     string
-	MengerId int64
-	Status   byte
+	Model
+	Name     string `gorm:"not null;type:varchar(16)"`
+	ShowName string `gorm:"not null;type:varchar(10)"`
+	MengerId int64  `gorm:"not null"`
+	Status   byte   `gorm:"default:1"`
+}
+
+
+func (Category) TableName() string  {
+	return "t_category"
 }
 
 func GetAllCategory() ([]*Category, error) {

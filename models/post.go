@@ -1,15 +1,19 @@
 package models
 
-import "github.com/jinzhu/gorm"
+import "gorm.io/gorm"
 
 type Post struct {
-	gorm.Model
+	Model
 	Title       string
 	Description string
 	Type        int32
 	CategoryId  int64
 	MengerId    int64
 	Status      byte
+}
+
+func (Post) TableName() string  {
+	return "t_post"
 }
 
 func GetPostList(categoryId, lastId int64) ([]*Post, error) {
