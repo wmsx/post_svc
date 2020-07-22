@@ -9,14 +9,13 @@ import (
 
 type PostHandler struct{}
 
-func (p *PostHandler) SavePost(ctx context.Context, req *proto.CreatePostRequest, res *proto.CreatePostResponse) error {
+func (p *PostHandler) CreatePost(ctx context.Context, req *proto.CreatePostRequest, res *proto.CreatePostResponse) error {
 	post := &models.Post{
 		Title:       req.Title,
 		Description: req.Description,
 		Type:        req.Type,
 		CategoryId:  req.CategoryId,
 		MengerId:    req.MengerId,
-		Status:      1,
 	}
 	_ = models.AddPost(post)
 	postItems := make([]*models.PostItem, 0)
@@ -25,7 +24,7 @@ func (p *PostHandler) SavePost(ctx context.Context, req *proto.CreatePostRequest
 			PostId:   post.ID,
 			ObjectId: protoPostItem.ObjectId,
 			Index:    protoPostItem.Index,
-			Status:   1,
+			Type:     protoPostItem.Type,
 		}
 		postItems = append(postItems, postItem)
 	}
@@ -46,7 +45,7 @@ func (p *PostHandler) GetPostList(ctx context.Context, req *proto.GetPostListReq
 
 	postIds := make([]int64, 0)
 	for _, post := range posts {
-		postIds = append(postIds, int64(post.ID))
+		postIds = append(postIds, post.ID)
 	}
 
 	if postItems, err = models.GetItemByPostIds(postIds); err != nil {
@@ -56,19 +55,17 @@ func (p *PostHandler) GetPostList(ctx context.Context, req *proto.GetPostListReq
 
 	post2ItemMap := make(map[int64][]*models.PostItem)
 	for _, postItem := range postItems {
-		var items []*models.PostItem
-		var ok bool
-		if items, ok = post2ItemMap[postItem.PostId]; !ok {
-			items = make([]*models.PostItem, 0)
-			post2ItemMap[postItem.PostId] = items
+		if len(post2ItemMap[postItem.PostId]) == 0 {
+			post2ItemMap[postItem.PostId] = []*models.PostItem{postItem}
+		} else {
+			post2ItemMap[postItem.PostId] = append(post2ItemMap[postItem.PostId], postItem)
 		}
-		items = append(items, postItem)
 	}
 
 	postInfos := make([]*proto.PostInfo, 0)
 	for _, post := range posts {
 		protoPostItems := make([]*proto.PostItem, 0)
-		if modelPostItems, ok := post2ItemMap[int64(post.ID)]; ok {
+		if modelPostItems, ok := post2ItemMap[post.ID]; ok {
 			for _, modelPostItem := range modelPostItems {
 				protoItem := &proto.PostItem{
 					ObjectId: modelPostItem.ObjectId,
@@ -78,7 +75,7 @@ func (p *PostHandler) GetPostList(ctx context.Context, req *proto.GetPostListReq
 			}
 		}
 		postInfo := &proto.PostInfo{
-			Id:          int64(post.ID),
+			Id:          post.ID,
 			Type:        post.Type,
 			Title:       post.Title,
 			Description: post.Description,

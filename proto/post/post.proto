@@ -3,7 +3,7 @@ syntax = "proto3";
 package go.micro.service.post_svc;
 
 service Post {
-    rpc SavePost (CreatePostRequest) returns (CreatePostResponse) {
+    rpc CreatePost (CreatePostRequest) returns (CreatePostResponse) {
     }
     rpc GetPostList (GetPostListRequest) returns (GetPostListResponse) {
     }
@@ -12,11 +12,11 @@ service Post {
 
 message CreatePostRequest {
     int64 id = 1;
-    int32 type = 2;
-    string title = 3;
-    string description = 4;
-    int64 mengerId = 5;
-    int64 categoryId = 6;
+    int64 mengerId = 2;
+    int64 categoryId = 3;
+    int32 type = 4;
+    string title = 5;
+    string description = 6;
     repeated PostItem items = 7;
 }
 
@@ -46,6 +46,7 @@ message PostInfo {
 message PostItem {
     int64 objectId = 1;
     int32 index = 2;
+    int32 type = 3;
 }
 
 

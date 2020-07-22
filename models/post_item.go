@@ -2,15 +2,12 @@ package models
 
 type PostItem struct {
 	Model
-	PostId   int64
-	ObjectId int64
-	Index    int32
-	Status   byte
+	PostId   int64 `gorm:"index:idx_post_id;comment:关联post的ID"`
+	ObjectId int64 `gorm:"comment:对象id"`
+	Index    int32 `gorm:"comment:在整个post的序号"`
+	Type     int32 `gorm:"comment:类型 1-图片 2-视频"`
 }
 
-func (PostItem) TableName() string  {
-	return "t_post_item"
-}
 
 func GetItemByPostIds(postIds []int64) ([]*PostItem, error) {
 	var items []*PostItem

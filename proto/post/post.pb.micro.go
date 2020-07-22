@@ -34,7 +34,7 @@ var _ server.Option
 // Client API for Post service
 
 type PostService interface {
-	SavePost(ctx context.Context, in *CreatePostRequest, opts ...client.CallOption) (*CreatePostResponse, error)
+	CreatePost(ctx context.Context, in *CreatePostRequest, opts ...client.CallOption) (*CreatePostResponse, error)
 	GetPostList(ctx context.Context, in *GetPostListRequest, opts ...client.CallOption) (*GetPostListResponse, error)
 }
 
@@ -50,8 +50,8 @@ func NewPostService(name string, c client.Client) PostService {
 	}
 }
 
-func (c *postService) SavePost(ctx context.Context, in *CreatePostRequest, opts ...client.CallOption) (*CreatePostResponse, error) {
-	req := c.c.NewRequest(c.name, "Post.SavePost", in)
+func (c *postService) CreatePost(ctx context.Context, in *CreatePostRequest, opts ...client.CallOption) (*CreatePostResponse, error) {
+	req := c.c.NewRequest(c.name, "Post.CreatePost", in)
 	out := new(CreatePostResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -73,13 +73,13 @@ func (c *postService) GetPostList(ctx context.Context, in *GetPostListRequest, o
 // Server API for Post service
 
 type PostHandler interface {
-	SavePost(context.Context, *CreatePostRequest, *CreatePostResponse) error
+	CreatePost(context.Context, *CreatePostRequest, *CreatePostResponse) error
 	GetPostList(context.Context, *GetPostListRequest, *GetPostListResponse) error
 }
 
 func RegisterPostHandler(s server.Server, hdlr PostHandler, opts ...server.HandlerOption) error {
 	type post interface {
-		SavePost(ctx context.Context, in *CreatePostRequest, out *CreatePostResponse) error
+		CreatePost(ctx context.Context, in *CreatePostRequest, out *CreatePostResponse) error
 		GetPostList(ctx context.Context, in *GetPostListRequest, out *GetPostListResponse) error
 	}
 	type Post struct {
@@ -93,8 +93,8 @@ type postHandler struct {
 	PostHandler
 }
 
-func (h *postHandler) SavePost(ctx context.Context, in *CreatePostRequest, out *CreatePostResponse) error {
-	return h.PostHandler.SavePost(ctx, in, out)
+func (h *postHandler) CreatePost(ctx context.Context, in *CreatePostRequest, out *CreatePostResponse) error {
+	return h.PostHandler.CreatePost(ctx, in, out)
 }
 
 func (h *postHandler) GetPostList(ctx context.Context, in *GetPostListRequest, out *GetPostListResponse) error {

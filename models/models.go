@@ -37,7 +37,7 @@ func SetUp() (err error) {
 		return err
 	}
 
-	if sqlDB, err = db.DB();err != nil {
+	if sqlDB, err = db.DB(); err != nil {
 		log.Error("获取数据库实例失败 err:", err)
 		return err
 	}

@@ -1,18 +1,12 @@
 package models
 
-import "github.com/jinzhu/gorm"
+import "gorm.io/gorm"
 
 type Category struct {
 	Model
-	Name     string `gorm:"not null;type:varchar(16)"`
-	ShowName string `gorm:"not null;type:varchar(10)"`
-	MengerId int64  `gorm:"not null"`
-	Status   byte   `gorm:"default:1"`
-}
-
-
-func (Category) TableName() string  {
-	return "t_category"
+	Name     string `gorm:"not null;type:varchar(16);comment:名字"`
+	ShowName string `gorm:"not null;type:varchar(10);comment:显示名"`
+	MengerId int64  `gorm:"not null;comment:创建人"`
 }
 
 func GetAllCategory() ([]*Category, error) {

@@ -10,9 +10,9 @@ type CategoryHandler struct{}
 
 // 获取所有分类
 func (c CategoryHandler) GetAllCategory(ctx context.Context,
-	req *proto.GetAllCategoryRequest, res *proto.GetAllCategoryResponse) error {
+		req *proto.GetAllCategoryRequest, res *proto.GetAllCategoryResponse) error {
 	var (
-		err error
+		err        error
 		categories []*models.Category
 	)
 
@@ -21,9 +21,9 @@ func (c CategoryHandler) GetAllCategory(ctx context.Context,
 	}
 
 	categoryInfos := make([]*proto.CategoryInfo, 0)
-	for _, category := range categories{
+	for _, category := range categories {
 		categoryInfo := &proto.CategoryInfo{
-			Id:       int64(category.ID),
+			Id:       category.ID,
 			Name:     category.Name,
 			MengerId: category.MengerId,
 		}
@@ -36,13 +36,13 @@ func (c CategoryHandler) GetAllCategory(ctx context.Context,
 
 // 创建分类
 func (c CategoryHandler) CreateCategory(ctx context.Context,
-	req *proto.CreateCategoryRequest, res *proto.CreateCategoryResponse) error {
-	
+		req *proto.CreateCategoryRequest, res *proto.CreateCategoryResponse) error {
+
 	category := &models.Category{
-		Name:   req.Name,
-		Status: 1,
+		Name:     req.Name,
+		ShowName: req.ShowName,
 	}
-	if err := models.CreateCategory(category); err != nil  {
+	if err := models.CreateCategory(category); err != nil {
 		return err
 	}
 	res = &proto.CreateCategoryResponse{}
