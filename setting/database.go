@@ -34,6 +34,9 @@ func setUpDB(appName, env string) error {
 		log.Error("获取db配置失败")
 		return err
 	}
+
+	log.Info("获取数据库配置: ", DatabaseSetting)
+
 	dbWatcher, err := dbConfig.Watch()
 	if err != nil {
 		log.Error("db配置watch失败")
