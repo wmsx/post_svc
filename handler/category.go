@@ -41,6 +41,7 @@ func (c CategoryHandler) CreateCategory(ctx context.Context,
 	category := &models.Category{
 		Name:     req.Name,
 		ShowName: req.ShowName,
+		MengerId: req.MengerId,
 	}
 	if err := models.CreateCategory(category); err != nil {
 		return err
