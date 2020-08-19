@@ -81,6 +81,7 @@ func (p *PostHandler) GetPostList(ctx context.Context, req *proto.GetPostListReq
 			Description: post.Description,
 			MengerId:    post.MengerId,
 			Item:        protoPostItems,
+			CreateAt:    post.CreatedAt.Unix(),
 		}
 		postInfos = append(postInfos, postInfo)
 	}
