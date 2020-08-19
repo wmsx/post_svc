@@ -26,6 +26,7 @@ func (c CategoryHandler) GetAllCategory(ctx context.Context,
 			Id:       category.ID,
 			Name:     category.Name,
 			MengerId: category.MengerId,
+			ShowName: category.ShowName,
 		}
 		categoryInfos = append(categoryInfos, categoryInfo)
 	}
