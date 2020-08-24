@@ -21,10 +21,10 @@ func (p *PostHandler) CreatePost(ctx context.Context, req *proto.CreatePostReque
 	postItems := make([]*models.PostItem, 0)
 	for _, protoPostItem := range req.Items {
 		postItem := &models.PostItem{
-			PostId:   post.ID,
-			ObjectId: protoPostItem.ObjectId,
-			Index:    protoPostItem.Index,
-			Type:     protoPostItem.Type,
+			PostId:  post.ID,
+			StoreId: protoPostItem.StoreId,
+			Index:   protoPostItem.Index,
+			Type:    protoPostItem.Type,
 		}
 		postItems = append(postItems, postItem)
 	}
@@ -68,8 +68,9 @@ func (p *PostHandler) GetPostList(ctx context.Context, req *proto.GetPostListReq
 		if modelPostItems, ok := post2ItemMap[post.ID]; ok {
 			for _, modelPostItem := range modelPostItems {
 				protoItem := &proto.PostItem{
-					ObjectId: modelPostItem.ObjectId,
-					Index:    modelPostItem.Index,
+					StoreId: modelPostItem.StoreId,
+					Index:   modelPostItem.Index,
+					Type:    modelPostItem.Type,
 				}
 				protoPostItems = append(protoPostItems, protoItem)
 			}

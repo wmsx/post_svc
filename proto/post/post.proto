@@ -45,7 +45,7 @@ message PostInfo {
 }
 
 message PostItem {
-    int64 objectId = 1;
+    int64 storeId = 1;
     int32 index = 2;
     int32 type = 3;
 }
