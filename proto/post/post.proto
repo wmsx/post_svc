@@ -7,8 +7,30 @@ service Post {
     }
     rpc GetPostList (GetPostListRequest) returns (GetPostListResponse) {
     }
+    rpc GetPostByIds (GetPostByIdsRequest) returns (GetPostByIdsResponse) {
+    }
+    rpc GetMengerPostList(GetMengerPostListRequest) returns (GetMengerPostListResponse) {
+    }
 }
 
+message GetMengerPostListRequest {
+    int64 mengerId = 1;
+    int32 pageNum = 2;
+    int32 pageSize = 3;
+}
+
+message GetMengerPostListResponse {
+     repeated  PostInfo postInfos = 1;
+}
+
+
+message GetPostByIdsRequest {
+   repeated int64 ids = 1;
+}
+
+message GetPostByIdsResponse {
+   repeated  PostInfo postInfos = 1;
+}
 
 message CreatePostRequest {
     int64 id = 1;

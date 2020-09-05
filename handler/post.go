@@ -9,7 +9,7 @@ import (
 
 type PostHandler struct{}
 
-func (p *PostHandler) CreatePost(ctx context.Context, req *proto.CreatePostRequest, res *proto.CreatePostResponse) error {
+func (h *PostHandler) CreatePost(ctx context.Context, req *proto.CreatePostRequest, res *proto.CreatePostResponse) error {
 	post := &models.Post{
 		Title:       req.Title,
 		Description: req.Description,
@@ -32,7 +32,7 @@ func (p *PostHandler) CreatePost(ctx context.Context, req *proto.CreatePostReque
 	return nil
 }
 
-func (p *PostHandler) GetPostList(ctx context.Context, req *proto.GetPostListRequest, res *proto.GetPostListResponse) error {
+func (h *PostHandler) GetPostList(ctx context.Context, req *proto.GetPostListRequest, res *proto.GetPostListResponse) error {
 	var (
 		posts     []*models.Post
 		postItems []*models.PostItem
@@ -52,7 +52,56 @@ func (p *PostHandler) GetPostList(ctx context.Context, req *proto.GetPostListReq
 		log.Error("从数据库获取PostItem列表失败, err: ", err)
 		return err
 	}
+	postInfos := composePostInfos(posts, postItems)
+	res.PostInfos = postInfos
+	return nil
+}
 
+func (h *PostHandler) GetPostByIds(ctx context.Context, req *proto.GetPostByIdsRequest, res *proto.GetPostByIdsResponse) error {
+	var (
+		posts     []*models.Post
+		postItems []*models.PostItem
+		err       error
+	)
+	posts, err = models.GetPostByIds(req.Ids)
+	if err != nil {
+		log.Error("根据id列表获取post失败 err: ", err)
+		return err
+	}
+
+	if postItems, err = models.GetItemByPostIds(req.Ids); err != nil {
+		log.Error("从数据库获取PostItem列表失败, err: ", err)
+		return err
+	}
+	res.PostInfos = composePostInfos(posts, postItems)
+	return nil
+}
+
+func (h *PostHandler) GetMengerPostList(ctx context.Context, req *proto.GetMengerPostListRequest, res *proto.GetMengerPostListResponse) error {
+	var (
+		posts     []*models.Post
+		postItems []*models.PostItem
+		err       error
+	)
+	posts, err = models.GetMengerPostList(req.MengerId, req.PageNum, req.PageSize)
+	if err != nil {
+		log.Error("查询用户发布的Post失败, err: ", err)
+		return err
+	}
+
+	ids := make([]int64, 0)
+	for _, post := range posts {
+		ids = append(ids, post.ID)
+	}
+	if postItems, err = models.GetItemByPostIds(ids); err != nil {
+		log.Error("从数据库获取PostItem列表失败, err: ", err)
+		return err
+	}
+	res.PostInfos = composePostInfos(posts, postItems)
+	return nil
+}
+
+func composePostInfos(posts []*models.Post, postItems []*models.PostItem) []*proto.PostInfo {
 	post2ItemMap := make(map[int64][]*models.PostItem)
 	for _, postItem := range postItems {
 		if len(post2ItemMap[postItem.PostId]) == 0 {
@@ -86,6 +135,5 @@ func (p *PostHandler) GetPostList(ctx context.Context, req *proto.GetPostListReq
 		}
 		postInfos = append(postInfos, postInfo)
 	}
-	res.PostInfos = postInfos
-	return nil
+	return postInfos
 }

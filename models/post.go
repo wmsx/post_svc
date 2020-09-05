@@ -23,6 +23,39 @@ func GetPostList(categoryId, lastId int64) ([]*Post, error) {
 	return posts, nil
 }
 
+func GetPostByIds(postIds []int64) ([]*Post, error) {
+	var posts []*Post
+	err := db.Where("id in (?)", postIds).Find(&posts).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return posts, nil
+}
+
+func GetMengerPostList(mengerId int64, pageNum, pageSize int32) ([]*Post, error) {
+
+	var id int64
+	db.Table("t_post").
+		Select("id").
+		Where("mengerId = ?", mengerId).
+		Offset(int(pageNum * pageSize)).
+		Scan(&id)
+
+	var posts []*Post
+
+	err := db.Where("id > ?", id).Limit(int(pageSize)).Find(&posts).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return posts, nil
+}
+
 func AddPost(post *Post) error {
 	err := db.Create(post).Error
 	if err != nil {

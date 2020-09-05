@@ -36,6 +36,8 @@ var _ server.Option
 type PostService interface {
 	CreatePost(ctx context.Context, in *CreatePostRequest, opts ...client.CallOption) (*CreatePostResponse, error)
 	GetPostList(ctx context.Context, in *GetPostListRequest, opts ...client.CallOption) (*GetPostListResponse, error)
+	GetPostByIds(ctx context.Context, in *GetPostByIdsRequest, opts ...client.CallOption) (*GetPostByIdsResponse, error)
+	GetMengerPostList(ctx context.Context, in *GetMengerPostListRequest, opts ...client.CallOption) (*GetMengerPostListResponse, error)
 }
 
 type postService struct {
@@ -70,17 +72,41 @@ func (c *postService) GetPostList(ctx context.Context, in *GetPostListRequest, o
 	return out, nil
 }
 
+func (c *postService) GetPostByIds(ctx context.Context, in *GetPostByIdsRequest, opts ...client.CallOption) (*GetPostByIdsResponse, error) {
+	req := c.c.NewRequest(c.name, "Post.GetPostByIds", in)
+	out := new(GetPostByIdsResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *postService) GetMengerPostList(ctx context.Context, in *GetMengerPostListRequest, opts ...client.CallOption) (*GetMengerPostListResponse, error) {
+	req := c.c.NewRequest(c.name, "Post.GetMengerPostList", in)
+	out := new(GetMengerPostListResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Post service
 
 type PostHandler interface {
 	CreatePost(context.Context, *CreatePostRequest, *CreatePostResponse) error
 	GetPostList(context.Context, *GetPostListRequest, *GetPostListResponse) error
+	GetPostByIds(context.Context, *GetPostByIdsRequest, *GetPostByIdsResponse) error
+	GetMengerPostList(context.Context, *GetMengerPostListRequest, *GetMengerPostListResponse) error
 }
 
 func RegisterPostHandler(s server.Server, hdlr PostHandler, opts ...server.HandlerOption) error {
 	type post interface {
 		CreatePost(ctx context.Context, in *CreatePostRequest, out *CreatePostResponse) error
 		GetPostList(ctx context.Context, in *GetPostListRequest, out *GetPostListResponse) error
+		GetPostByIds(ctx context.Context, in *GetPostByIdsRequest, out *GetPostByIdsResponse) error
+		GetMengerPostList(ctx context.Context, in *GetMengerPostListRequest, out *GetMengerPostListResponse) error
 	}
 	type Post struct {
 		post
@@ -99,4 +125,12 @@ func (h *postHandler) CreatePost(ctx context.Context, in *CreatePostRequest, out
 
 func (h *postHandler) GetPostList(ctx context.Context, in *GetPostListRequest, out *GetPostListResponse) error {
 	return h.PostHandler.GetPostList(ctx, in, out)
+}
+
+func (h *postHandler) GetPostByIds(ctx context.Context, in *GetPostByIdsRequest, out *GetPostByIdsResponse) error {
+	return h.PostHandler.GetPostByIds(ctx, in, out)
+}
+
+func (h *postHandler) GetMengerPostList(ctx context.Context, in *GetMengerPostListRequest, out *GetMengerPostListResponse) error {
+	return h.PostHandler.GetMengerPostList(ctx, in, out)
 }
