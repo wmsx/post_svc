@@ -83,7 +83,7 @@ func (h *PostHandler) GetMengerPostList(ctx context.Context, req *proto.GetMenge
 		postItems []*models.PostItem
 		err       error
 	)
-	posts, err = models.GetMengerPostList(req.MengerId, req.PageNum, req.PageSize)
+ 	posts, err = models.GetMengerPostList(req.MengerId, req.PageNum, req.PageSize)
 	if err != nil {
 		log.Error("查询用户发布的Post失败, err: ", err)
 		return err

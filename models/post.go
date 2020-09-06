@@ -40,8 +40,9 @@ func GetMengerPostList(mengerId int64, pageNum, pageSize int32) ([]*Post, error)
 	var id int64
 	db.Table("t_post").
 		Select("id").
-		Where("mengerId = ?", mengerId).
+		Where("menger_id = ?", mengerId).
 		Offset(int(pageNum * pageSize)).
+		Limit(1).
 		Scan(&id)
 
 	var posts []*Post
